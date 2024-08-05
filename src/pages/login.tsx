@@ -5,35 +5,22 @@ import {
   FormControl,
   FormLabel,
   Input,
-  Checkbox,
+  InputGroup,
+  HStack,
+  InputRightElement,
   Stack,
   Button,
   Heading,
   Text,
   useColorModeValue,
+  Link,
 } from '@chakra-ui/react'
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
+import { useState } from 'react'
+import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 
+export default function SignupCard() {
+  const [showPassword, setShowPassword] = useState(false)
 
-export default function LoginPage() {
-    const schema = yup.object().shape({
-        email: yup.string().required('ป้อนข้อมูลอีเมลด้วย').email("รูปเเบบอีเมลไม่ถูกต้อง"),
-        password: yup.string().required("ป้อนข้อมูลรหัสผ่าน").min(6,"รหัสผ่านต้องมีรหัสอย่างน้อย 6 ตัว"),
-    });
-    const{
-        register,
-        handleSubmit,
-        fromstate: {errors},
-
-    } = useForm<LoginFromInput>({
-        resolver: yupResolver(schema),
-        mode: 'onSubmit'
-    });
-    const onSubmit:SubmitHandler<LoginFromInput> =(data) => {
-        console.log(data);
-    }
   return (
     <Flex
       minH={'100vh'}
@@ -42,9 +29,11 @@ export default function LoginPage() {
       bg={useColorModeValue('gray.50', 'gray.800')}>
       <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
         <Stack align={'center'}>
-          <Heading fontSize={'4xl'}>Sign in to your account</Heading>
+          <Heading fontSize={'4xl'} textAlign={'center'}>
+            Sign up
+          </Heading>
           <Text fontSize={'lg'} color={'gray.600'}>
-            to enjoy all of our cool <Text color={'blue.400'}>features</Text> ✌️
+            to enjoy all of our cool features ✌️
           </Text>
         </Stack>
         <Box
@@ -53,30 +42,53 @@ export default function LoginPage() {
           boxShadow={'lg'}
           p={8}>
           <Stack spacing={4}>
-            <FormControl id="email">
+            <HStack>
+              <Box>
+                <FormControl id="firstName" isRequired>
+                  <FormLabel>First Name</FormLabel>
+                  <Input type="text" />
+                </FormControl>
+              </Box>
+              <Box>
+                <FormControl id="lastName">
+                  <FormLabel>Last Name</FormLabel>
+                  <Input type="text" />
+                </FormControl>
+              </Box>
+            </HStack>
+            <FormControl id="email" isRequired>
               <FormLabel>Email address</FormLabel>
               <Input type="email" />
             </FormControl>
-            <FormControl id="password">
+            <FormControl id="password" isRequired>
               <FormLabel>Password</FormLabel>
-              <Input type="password" />
+              <InputGroup>
+                <Input type={showPassword ? 'text' : 'password'} />
+                <InputRightElement h={'full'}>
+                  <Button
+                    variant={'ghost'}
+                    onClick={() => setShowPassword((showPassword) => !showPassword)}>
+                    {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                  </Button>
+                </InputRightElement>
+              </InputGroup>
             </FormControl>
-            <Stack spacing={10}>
-              <Stack
-                direction={{ base: 'column', sm: 'row' }}
-                align={'start'}
-                justify={'space-between'}>
-                <Checkbox>Remember me</Checkbox>
-                <Text color={'blue.400'}>Forgot password?</Text>
-              </Stack>
+            <Stack spacing={10} pt={2}>
               <Button
+                loadingText="Submitting"
+                size="lg"
                 bg={'blue.400'}
                 color={'white'}
                 _hover={{
                   bg: 'blue.500',
                 }}>
-                Sign in
+                Sign up
               </Button>
+            </Stack>
+            <Stack pt={6}>
+              <Text align={'center'}>
+                Already a user? <Link color={'blue.400'}>Login</Link>
+              </Text>
             </Stack>
           </Stack>
         </Box>
